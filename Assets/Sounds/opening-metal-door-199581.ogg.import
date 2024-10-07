@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/opening-metal-door-199581.ogg-6fbfa1284d0776d06fe115db2ab568ec.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/opening-metal-door-199581.ogg"
+dest_files=[ "res://.import/opening-metal-door-199581.ogg-6fbfa1284d0776d06fe115db2ab568ec.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

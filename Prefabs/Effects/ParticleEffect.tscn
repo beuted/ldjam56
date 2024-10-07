@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Prefabs/Effects/ParticleEffect.cs" type="Script" id=1]
+[ext_resource path="res://Assets/Graphics/Effects/particle_wood.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Shaders/particle.tres" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 3 )
+shader_param/random_seed = 1
+shader_param/pivot_speed = 0.05
+shader_param/initial_y_velocity = 200.0
+shader_param/initial_random_x_velocity = 70.0
+shader_param/gravity_force = 1500.0
+shader_param/min_y = 2.0
+shader_param/inital_deform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+
+[node name="Particles2D" type="Particles2D"]
+amount = 4
+lifetime = 1.5
+explosiveness = 0.96
+randomness = 1.0
+visibility_rect = Rect2( -50, -50, 100, 100 )
+process_material = SubResource( 1 )
+texture = ExtResource( 2 )
+script = ExtResource( 1 )

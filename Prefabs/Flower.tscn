@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Prefabs/Flower.cs" type="Script" id=1]
+[ext_resource path="res://Assets/Graphics/Map/tiles-normal.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Graphics/Map/tiles.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 3.16228
+
+[node name="Flower" type="RigidBody2D"]
+collision_layer = 2081
+collision_mask = 2048
+mode = 1
+gravity_scale = 0.0
+contacts_reported = 4
+contact_monitor = true
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0, -4 )
+texture = ExtResource( 3 )
+normal_map = ExtResource( 2 )
+hframes = 28
+vframes = 40
+frame = 178
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -4 )
+shape = SubResource( 1 )

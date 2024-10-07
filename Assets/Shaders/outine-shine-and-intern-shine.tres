@@ -1,0 +1,64 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform float outline_width : hint_range(0.0, 30.0) = 0;
+uniform bool outline_effect = false;
+uniform vec4 outline_color : hint_color = vec4(0, 0, 0, 1);
+uniform bool shine_effect = false;
+uniform vec4 shine_color: hint_color = vec4(1, 1, 1, 1);
+uniform bool glow_effect = false;
+uniform vec4 glow_color: hint_color = vec4(1, 0, 0, 1);
+uniform float glow_quantity = 0.4;
+
+// https://www.youtube.com/watch?v=LAa8UE3ItM8
+void fragment()
+{
+    ivec2 textSize = textureSize(TEXTURE, 0);
+    float sizex = outline_width * 1.0 / float(textSize.x);
+    float sizey = outline_width * 1.0 / float(textSize.y);
+    vec4 sprite_color = texture(TEXTURE, UV);
+    
+    float alpha;
+    if (outline_effect) {
+      // Compute the outline
+      alpha = -4.0 * sprite_color.a;
+      alpha += texture(TEXTURE, UV + vec2(sizex, 0)).a;
+      alpha += texture(TEXTURE, UV + vec2(-sizex, 0)).a;
+      alpha += texture(TEXTURE, UV + vec2(0, sizey)).a;
+      alpha += texture(TEXTURE, UV + vec2(0, -sizey)).a;
+      
+      // Blinking color for outline
+      float factor = clamp(sin(TIME-UV.y*0.6)+0.5, 0.0, 0.4);
+      alpha = alpha * factor;
+    } else {
+      alpha = 0.0;
+    }
+    
+    // Shining effect
+    if (shine_effect) {
+      float factorShine = mod(TIME-UV.y*4.0, 5.0) / 5.0;
+      if (
+        (UV.x>=factorShine && UV.x<=0.02+factorShine)
+        || (UV.x>=factorShine-0.03 && UV.x<=factorShine-0.03+0.01)
+        || (UV.x>=factorShine-0.2 && UV.x<=factorShine-0.2+0.01)
+        || (UV.x>=factorShine-0.4 && UV.x<=factorShine-0.4+0.02)
+        || (UV.x>=factorShine-0.43 && UV.x<=factorShine-0.43+0.01)
+        || (UV.x>=factorShine-0.6 && UV.x<=factorShine-0.6+0.01)
+        || (UV.x>=factorShine-0.8 && UV.x<=factorShine-0.8+0.01)
+      ) {
+    		sprite_color.rgb = shine_color.rgb;
+   	  }
+    }
+    
+    // Glow effect
+    if (glow_effect) {
+        float factor = (sin(TIME*1.5+3.14)+1.0)/2.0 * glow_quantity;
+        sprite_color.rgb = mix(sprite_color.rgb, glow_color.rgb, factor);
+    }
+
+    
+    vec4 final_color = mix(sprite_color, outline_color, clamp(alpha, 0.0, 1.0));
+    COLOR = vec4(final_color.rgb, clamp(abs(alpha) + sprite_color.a, 0.0, 1.0));
+}"

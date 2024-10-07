@@ -1,0 +1,117 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://UI/InGame/GUI/GUI.cs" type="Script" id=1]
+[ext_resource path="res://Assets/Fonts/berkelium-1541.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/fonts/berkelium-1541.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Assets/Graphics/UI/health-bar-4.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Graphics/UI/coin.png" type="Texture" id=13]
+[ext_resource path="res://assets/fonts/berkelium/Berkelium1541.ttf" type="DynamicFontData" id=14]
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 5 )
+region = Rect2( 4, 13, 81, 11 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 5 )
+region = Rect2( 4, 50, 80, 11 )
+
+[sub_resource type="DynamicFont" id=24]
+size = 6
+outline_size = 1
+font_data = ExtResource( 14 )
+
+[node name="GUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 1 )
+
+[node name="TopLeft" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HealthBarBg" type="TextureRect" parent="TopLeft"]
+margin_left = 15.0
+margin_top = 16.0
+margin_right = 116.0
+margin_bottom = 27.0
+mouse_filter = 2
+texture = SubResource( 5 )
+
+[node name="HealthBar" type="TextureProgress" parent="TopLeft/HealthBarBg"]
+margin_right = 101.0
+margin_bottom = 16.0
+mouse_filter = 2
+value = 50.0
+rounded = true
+texture_progress = SubResource( 3 )
+
+[node name="HealthAmount" type="Label" parent="TopLeft/HealthBarBg"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -50.0
+margin_top = 3.0
+margin_right = 32.0
+margin_bottom = 9.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 3 )
+text = "100/100"
+align = 1
+
+[node name="TopRight" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="CollectiblesCoins" type="HBoxContainer" parent="TopRight"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -46.0
+margin_top = 14.0
+margin_right = -13.0
+margin_bottom = 26.0
+grow_horizontal = 0
+mouse_filter = 2
+custom_constants/separation = 2
+
+[node name="CoinsAmount" type="Label" parent="TopRight/CollectiblesCoins"]
+margin_right = 20.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 20, 12 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 0.607843 )
+custom_fonts/font = SubResource( 24 )
+text = "0"
+align = 2
+valign = 1
+
+[node name="TextureRect" type="TextureRect" parent="TopRight/CollectiblesCoins"]
+margin_left = 22.0
+margin_right = 33.0
+margin_bottom = 12.0
+mouse_filter = 2
+texture = ExtResource( 13 )
+
+[node name="FpsCounter" type="Label" parent="TopRight"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -31.0
+margin_top = 5.0
+margin_right = 19.0
+margin_bottom = 45.0
+custom_fonts/font = ExtResource( 2 )
+text = "100 FPS"
+
+[node name="BottomRight" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[connection signal="mouse_entered" from="TopLeft/HealthBarBg" to="." method="ShowAmounts"]
+[connection signal="mouse_exited" from="TopLeft/HealthBarBg" to="." method="HideAmounts"]

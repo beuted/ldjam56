@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Shaders/clouds2d.shader" type="Shader" id=1]
+[ext_resource path="res://Assets/Graphics/Effects/clouds-noise.tres" type="Texture" id=2]
+
+[sub_resource type="Gradient" id=2]
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/tint = Color( 0.184314, 0.00784314, 0.180392, 1 )
+shader_param/scroll_direction_1 = Vector2( 0.7, -0.7 )
+shader_param/time_scale_1 = 0.012
+shader_param/tile_factor_1 = 2.0
+shader_param/scroll_direction_2 = Vector2( 0.75, 0.25 )
+shader_param/time_scale_2 = 0.005
+shader_param/tile_factor_2 = 0.3
+shader_param/gradient_texture = SubResource( 3 )
+
+[node name="Clouds" type="Sprite"]
+light_mask = 3
+material = SubResource( 1 )
+texture = ExtResource( 2 )

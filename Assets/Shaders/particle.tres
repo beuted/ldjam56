@@ -1,0 +1,57 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type particles;
+
+uniform uint random_seed = 1;
+uniform float pivot_speed = 0.05;
+uniform float initial_y_velocity = 250.0;
+uniform float initial_random_x_velocity = 70.0;
+uniform float gravity_force = 1500.0;
+uniform float min_y = 2.0;
+uniform mat4 inital_deform = mat4(
+  vec4(1.0, 0, 0, 0),
+  vec4(0, 1.0, 0, 0),
+  vec4(0, 0, 1.0, 0),
+  vec4(0, 0, 0, 1.0)
+);
+
+float rand_from_seed(in uint seed) {
+  int k;
+  int s = int(seed);
+  if (s == 0)
+    s = 305420679;
+  k = s / 127773;
+  s = 16807 * (s - k * 127773) - 2836 * k;
+  if (s < 0)
+    s += 2147483647;
+  seed = uint(s);
+  return float(seed % uint(65536)) / 65535.0;
+}
+
+void vertex() {
+  if (RESTART) {
+    CUSTOM[1] = TIME; // Start time, used for particle fade
+    CUSTOM[0] = (rand_from_seed(uint(TIME*100.0)*NUMBER*uint(73)*random_seed) - 0.5) * pivot_speed;
+    VELOCITY = vec3((rand_from_seed(uint(TIME*100.0)*NUMBER*uint(13)*random_seed) - 0.5) * initial_random_x_velocity, (rand_from_seed(uint(TIME*100.0)*NUMBER*uint(13)*random_seed) + 0.5) * -initial_y_velocity, 0.0);
+    TRANSFORM = TRANSFORM * inital_deform;
+  } else {
+    if (TRANSFORM[3].y > min_y) {
+      VELOCITY = vec3(0.0, 0.0, 0.0);
+    } else {
+      float pivot_angle = CUSTOM[0];
+      mat4 rotation_matrix = mat4(
+        vec4(cos(pivot_angle), -sin(pivot_angle), 0, 0),
+        vec4(sin(pivot_angle), cos(pivot_angle), 0, 0),
+        vec4(0, 0, 1.0, 0),
+        vec4(0, 0, 0, 1.0)
+      );
+      VELOCITY += vec3(0.0, gravity_force * DELTA, 0.0);
+      TRANSFORM = TRANSFORM * rotation_matrix;
+    }
+  }
+  
+  // Particle fade
+  float alpha = min(4.0 - 4.0*((TIME-CUSTOM[1]) / LIFETIME), 1.0);
+  COLOR = vec4(1.0, 1.0, 1.0, alpha);
+}"

@@ -1,0 +1,60 @@
+[gd_resource type="Theme" load_steps=21 format=2]
+
+[ext_resource path="res://Assets/Graphics/UI/button-normal-styleboxtexture.tres" type="StyleBox" id=1]
+[ext_resource path="res://Assets/Fonts/berkelium-1541.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Assets/Graphics/UI/button-disabled-styleboxtexture.tres" type="StyleBox" id=3]
+[ext_resource path="res://Assets/Fonts/matchup-pro-1-1.tres" type="DynamicFont" id=4]
+[ext_resource path="res://Assets/Graphics/UI/panel-styleboxtexture.tres" type="StyleBox" id=5]
+[ext_resource path="res://Assets/Graphics/UI/v-scroll-bar-grabber-styleboxtexture.tres" type="StyleBox" id=6]
+[ext_resource path="res://Assets/Graphics/UI/v-scroll-bar-scroll-styleboxtexture.tres" type="StyleBox" id=7]
+[ext_resource path="res://Assets/Graphics/UI/v-scroll-bar-grabber-highlight-styleboxtexture.tres" type="StyleBox" id=8]
+[ext_resource path="res://Assets/Graphics/UI/h-scroll-bar-grabber-styleboxtexture.tres" type="StyleBox" id=9]
+[ext_resource path="res://Assets/Graphics/UI/h-scroll-bar-scroll-styleboxtexture.tres" type="StyleBox" id=10]
+[ext_resource path="res://Assets/Graphics/UI/h-scroll-bar-grabber-highlight-styleboxtexture.tres" type="StyleBox" id=11]
+[ext_resource path="res://Assets/Graphics/UI/progress-bar-bg.tres" type="StyleBox" id=12]
+[ext_resource path="res://Assets/Graphics/UI/progress-bar-fg.tres" type="StyleBox" id=13]
+[ext_resource path="res://Assets/Graphics/UI/button-pressed-styleboxtexture.tres" type="StyleBox" id=14]
+[ext_resource path="res://Assets/Graphics/UI/button-hover-styleboxtexture.tres" type="StyleBox" id=15]
+[ext_resource path="res://Assets/Graphics/UI/slider-grabber.png" type="Texture" id=16]
+[ext_resource path="res://Assets/Graphics/UI/slider-grabber-highlight.png" type="Texture" id=17]
+[ext_resource path="res://Assets/Graphics/UI/slider-area.tres" type="StyleBox" id=18]
+[ext_resource path="res://Assets/Graphics/UI/slider.tres" type="StyleBox" id=19]
+[ext_resource path="res://Assets/Graphics/UI/button-focus-styleboxtexture.tres" type="StyleBox" id=20]
+
+[resource]
+Button/colors/font_color = Color( 1, 1, 1, 1 )
+Button/colors/font_color_disabled = Color( 0.901961, 0.901961, 0.901961, 0.556863 )
+Button/colors/font_color_focus = Color( 1, 1, 1, 1 )
+Button/colors/font_color_hover = Color( 1, 1, 1, 1 )
+Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+Button/constants/hseparation = 5
+Button/fonts/font = ExtResource( 4 )
+Button/styles/disabled = ExtResource( 3 )
+Button/styles/focus = ExtResource( 20 )
+Button/styles/hover = ExtResource( 15 )
+Button/styles/normal = ExtResource( 1 )
+Button/styles/pressed = ExtResource( 14 )
+HScrollBar/icons/decrement = null
+HScrollBar/icons/decrement_highlight = null
+HScrollBar/icons/decrement_pressed = null
+HScrollBar/icons/increment = null
+HScrollBar/icons/increment_highlight = null
+HScrollBar/icons/increment_pressed = null
+HScrollBar/styles/grabber = ExtResource( 9 )
+HScrollBar/styles/grabber_highlight = ExtResource( 11 )
+HScrollBar/styles/grabber_pressed = ExtResource( 11 )
+HScrollBar/styles/scroll = ExtResource( 10 )
+HSlider/icons/grabber = ExtResource( 16 )
+HSlider/icons/grabber_highlight = ExtResource( 17 )
+HSlider/styles/grabber_area = ExtResource( 18 )
+HSlider/styles/grabber_area_highlight = ExtResource( 18 )
+HSlider/styles/slider = ExtResource( 19 )
+Label/fonts/font = ExtResource( 4 )
+Panel/styles/panel = ExtResource( 5 )
+ProgressBar/fonts/font = ExtResource( 2 )
+ProgressBar/styles/bg = ExtResource( 12 )
+ProgressBar/styles/fg = ExtResource( 13 )
+VScrollBar/styles/grabber = ExtResource( 6 )
+VScrollBar/styles/grabber_highlight = ExtResource( 8 )
+VScrollBar/styles/grabber_pressed = ExtResource( 8 )
+VScrollBar/styles/scroll = ExtResource( 7 )

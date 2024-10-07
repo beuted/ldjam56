@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Graphics/Map/tiles-normal.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Shaders/blink_white.shader" type="Shader" id=2]
+[ext_resource path="res://Assets/Graphics/Map/tiles.png" type="Texture" id=3]
+[ext_resource path="res://Prefabs/Mushroom.cs" type="Script" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+shader_param/white_progress = 0.0
+shader_param/white_progress2 = 0.0
+shader_param/flash_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 6, 6.5 )
+
+[node name="Mushroom" type="StaticBody2D" groups=["collectibles"]]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 1 )
+texture = ExtResource( 3 )
+normal_map = ExtResource( 1 )
+hframes = 28
+vframes = 40
+frame = 258
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1.5 )
+shape = SubResource( 2 )
