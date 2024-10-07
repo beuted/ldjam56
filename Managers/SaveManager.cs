@@ -22,7 +22,6 @@ public class SaveManager : Node
   private PlayerManager _playerManager;
   private SoundManager _soundManager;
   private CollectiblesManager _collectiblesManager;
-  private CollectiblesCountManager _collectiblesCountManager;
   private static string SaveFileName = "user://godot-ladybug-s-underworld-2-dekajoo.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
   private static string ConfigFileName = "user://godot-ladybug-s-underworld-2-config.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
 
@@ -37,7 +36,6 @@ public class SaveManager : Node
     _playerManager = (PlayerManager)GetNode($"/root/{nameof(PlayerManager)}"); // Singleton
     _soundManager = (SoundManager)GetNode($"/root/{nameof(SoundManager)}"); // Singleton
     _collectiblesManager = (CollectiblesManager)GetNode($"/root/{nameof(CollectiblesManager)}"); // Singleton
-    _collectiblesCountManager = (CollectiblesCountManager)GetNode($"/root/{nameof(CollectiblesCountManager)}"); // Singleton
 
 
     // Init from save (this should be done once per program launch)

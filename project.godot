@@ -34,7 +34,6 @@ PauseMenuManager="*res://Managers/PauseMenuManager.cs"
 InputHelper="*res://addons/input_helper/input_helper.gd"
 InputManager="*res://Managers/InputManager.cs"
 CollectiblesManager="*res://Managers/CollectiblesManager.cs"
-CollectiblesCountManager="*res://Managers/CollectiblesCountManager.cs"
 TimeManager="*res://Managers/TimeManager.cs"
 MessagesManager="*res://Managers/MessagesManager.cs"
 

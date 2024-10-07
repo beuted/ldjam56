@@ -28,7 +28,7 @@ public class PlayerManager : Node
   public void InitWithSaveData(SaveData saveData, TileMap tileMap)
   {
     if (saveData != null)
-      CurrentPlayer.Init(saveData.PlayerName, saveData.PlayerPosition, tileMap);
+      CurrentPlayer.Init("dekajoo", saveData.PlayerPosition, tileMap);
     else
       CurrentPlayer.Init("dekajoo", StartPosition, tileMap);
   }

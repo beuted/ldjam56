@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 public class Seed : Collectible
 {
     private Vector2 _velocity = Vector2.Zero;
-    private CollectiblesCountManager _collectiblesCountManager;
     private CollectiblesManager _collectiblesManager;
     private PlayerManager _playerManager;
     private TimeManager _timeManager;
@@ -29,7 +28,6 @@ public class Seed : Collectible
 
     public override void _Ready()
     {
-        _collectiblesCountManager = GetNode<CollectiblesCountManager>($"/root/{nameof(CollectiblesCountManager)}"); // Singleton
         _collectiblesManager = GetNode<CollectiblesManager>($"/root/{nameof(CollectiblesManager)}"); // Singleton
         _playerManager = GetNode<PlayerManager>($"/root/{nameof(PlayerManager)}"); // Singleton
         _timeManager = GetNode<TimeManager>($"/root/{nameof(TimeManager)}"); // Singleton

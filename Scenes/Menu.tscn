@@ -103,12 +103,14 @@ margin_bottom = -10.0
 [node name="PlayButton" parent="Panel/VBoxContainer" instance=ExtResource( 5 )]
 margin_right = 180.0
 margin_bottom = 24.0
+focus_next = NodePath("../ContinueButton")
 text = "Play"
 
 [node name="ContinueButton" parent="Panel/VBoxContainer" instance=ExtResource( 5 )]
 margin_top = 28.0
 margin_right = 180.0
 margin_bottom = 52.0
+focus_next = NodePath("../OptionsButton")
 focus_mode = 2
 text = "Continue"
 
@@ -117,6 +119,7 @@ margin_top = 56.0
 margin_right = 180.0
 margin_bottom = 80.0
 focus_next = NodePath("../ExitButton")
+focus_previous = NodePath("../ContinueButton")
 text = "Options"
 
 [node name="ExitButton" parent="Panel/VBoxContainer" instance=ExtResource( 5 )]

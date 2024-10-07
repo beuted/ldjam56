@@ -40,6 +40,14 @@ public class Menu : Control
 
     _focusControl = _playButton;
     _playButton.BetterFocus = true;
+
+    InitUi();
+  }
+
+  private void InitUi()
+  {
+    var continueButton = GetNode<Button>("Panel/VBoxContainer/ContinueButton");
+    continueButton.Disabled = !_saveManager.HasSaveData();
   }
 
 

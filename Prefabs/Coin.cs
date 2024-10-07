@@ -4,7 +4,6 @@ using System;
 
 public class Coin : Collectible
 {
-  private CollectiblesCountManager _collectiblesCountManager;
   private CollectiblesManager _collectiblesManager;
   private PlayerManager _playerManager;
   private AnimationPlayer _animationPlayer;
@@ -20,7 +19,6 @@ public class Coin : Collectible
 
   public override void _Ready()
   {
-    _collectiblesCountManager = GetNode<CollectiblesCountManager>($"/root/{nameof(CollectiblesCountManager)}"); // Singleton
     _collectiblesManager = GetNode<CollectiblesManager>($"/root/{nameof(CollectiblesManager)}"); // Singleton
     _playerManager = GetNode<PlayerManager>($"/root/{nameof(PlayerManager)}"); // Singleton
 
