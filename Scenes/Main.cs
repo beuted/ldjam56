@@ -49,7 +49,7 @@ public class Main : Node2D
     _gui.Init(player);
 
     // Pour pouvoir voir qqchos en mode edit sur godot
-    GetNode<CanvasModulate>("Map/CanvasModulate").Color = new Color("1f2028");
+    GetNode<CanvasModulate>("Map/CanvasModulate").Color = new Color("343643");
 
     // Welcome message
     _messagesManager.ShowMessageStart();

@@ -6,7 +6,7 @@ public class CameraManager : Node2D
   private Camera _camera;
   private PackedScene _cameraScene;
 
-  public static float ZoomFactor = 8;
+  public static float ZoomFactor = 6;
 
   public override void _Ready()
   {

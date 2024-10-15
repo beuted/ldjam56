@@ -3,6 +3,8 @@ using System;
 
 public class MessagesManager : Node
 {
+    private InputManager _inputManager;
+
     private Control _containerNode;
 
     private Control _containerPickup;
@@ -11,6 +13,9 @@ public class MessagesManager : Node
     private Control _containerFinalFinal;
     private Control _containerStart;
 
+    private RichTextLabel _pickupLabel;
+    private RichTextLabel _ballingLabel;
+
     private bool _showMessagePickup;
     private bool _showMessageBalling;
     private bool _showMessageFinalFinal;
@@ -18,6 +23,8 @@ public class MessagesManager : Node
     private bool _showMessageStart;
 
     public float SpeedOfReveal = 0.2f;
+    private bool _hasShowMessageFinal;
+    private bool _hasShowMessageFinalFinal;
 
     public override void _Ready()
     {
@@ -26,6 +33,8 @@ public class MessagesManager : Node
 
     internal void Init(Control containerNode)
     {
+        _inputManager = (InputManager)GetNode($"/root/{nameof(InputManager)}"); // Singleton
+
         _containerNode = containerNode;
 
         _containerPickup = _containerNode.GetNode<Control>("CenterContainerPickup");
@@ -33,6 +42,9 @@ public class MessagesManager : Node
         _containerFinal = _containerNode.GetNode<Control>("CenterContainerFinal");
         _containerFinalFinal = _containerNode.GetNode<Control>("CenterContainerFinalFinal");
         _containerStart = _containerNode.GetNode<Control>("CenterContainerStart");
+
+        _pickupLabel = _containerPickup.GetNode<RichTextLabel>("RichTextLabel");
+        _ballingLabel = _containerBalling.GetNode<RichTextLabel>("RichTextLabel");
 
         ResetTransparenciesToZero();
 
@@ -164,6 +176,14 @@ public class MessagesManager : Node
 
     public void ShowMessagePickup()
     {
+        var bbCodePickupMessage = $"[center]Atlas Grasp[/center]\n\n[center][wave amp=10 freq=2]You can now lift items by pressing $0[/wave][/center]";
+        var pickUpMessageInput = "[color=#f0be1d]\"e\"[/color] or [color=#f0be1d]Left Click[/color]";
+        if (_inputManager.ControllerInUse)
+        {
+            pickUpMessageInput = "[color=#f0be1d]\"RB\"[/color] or [color=#f0be1d]\"RT\"[/color]";
+        }
+        _pickupLabel.BbcodeText = bbCodePickupMessage.Replace("$0", pickUpMessageInput);
+
         _showMessagePickup = true;
         _showMessageBalling = false;
         _showMessageFinal = false;
@@ -176,6 +196,14 @@ public class MessagesManager : Node
 
     public void ShowMessageBalling()
     {
+        var bbCodeBallingMessage = $"[center]Curved Shell[/center]\n\n[center][wave amp=10 freq=2]You can now roll into a ball by pressing $0[/wave][/center]";
+        var ballingMessageInput = "[color=#f0be1d]\"Shift\"[/color]";
+        if (_inputManager.ControllerInUse)
+        {
+            ballingMessageInput = "[color=#f0be1d]\"LB\"[/color] or [color=#f0be1d]\"LT\"[/color]";
+        }
+        _ballingLabel.BbcodeText = bbCodeBallingMessage.Replace("$0", ballingMessageInput);
+
         _showMessageBalling = true;
         _showMessagePickup = false;
         _showMessageFinal = false;
@@ -188,6 +216,10 @@ public class MessagesManager : Node
 
     public void ShowMessageFinal()
     {
+        if (_hasShowMessageFinal)
+            return;
+        _hasShowMessageFinal = true;
+
         _showMessageFinal = true;
         _showMessagePickup = false;
         _showMessageBalling = false;
@@ -200,6 +232,10 @@ public class MessagesManager : Node
 
     public void ShowMessageFinalFinal()
     {
+        if (_hasShowMessageFinalFinal)
+            return;
+        _hasShowMessageFinalFinal = true;
+
         _showMessageFinalFinal = true;
         _showMessageFinal = false;
         _showMessagePickup = false;

@@ -12,3 +12,16 @@ export_presets.cfg
 .vs
 .idea
 data_*/
+
+*.zip
+bin.zip
+bin-win-32.zip
+bin-win32.zip
+bin-win-64.zip
+bin-win64.zip
+
+bin/*
+bin-win-32/*
+bin-win-64/*
+bin-win32/*
+bin-win64/*

@@ -9,7 +9,7 @@ public class Vine : Area2D
   private CollectiblesManager _collectiblesManager;
   private SoundManager _soundManager;
   private PackedScene _flowerScene;
-  public float GrowthSpeed = 30f;
+  public float GrowthSpeed = 70f;
 
   public TileMap TileMap;
   private bool _stopGrowth = false;

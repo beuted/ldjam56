@@ -2,7 +2,7 @@
 
 [ext_resource path="res://UI/InGame/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Fonts/berkelium-1541.tres" type="DynamicFont" id=2]
-[ext_resource path="res://assets/fonts/berkelium-1541.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Assets/Fonts/berkelium-1541.tres" type="DynamicFont" id=3]
 [ext_resource path="res://Assets/Graphics/UI/health-bar-4.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Graphics/UI/coin.png" type="Texture" id=13]
 [ext_resource path="res://assets/fonts/berkelium/Berkelium1541.ttf" type="DynamicFontData" id=14]

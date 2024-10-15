@@ -33,18 +33,17 @@ public class CollectibleData
 
 public class CollectiblesManager : Node
 {
-  public Node2D CollectiblesNode; // Hack : set public bc I need to acess it in the saveManager
+  private Node2D _collectiblesNode;
   private SaveManager _saveManager;
   private PackedScene _soulScene;
   private PackedScene _coinScene;
   private PackedScene _mushroomCapScene;
   private PackedScene _seedScene;
+  private Dictionary<string, Coin> _coins; // used to keep track of godot Node2Ds
 
-  public Dictionary<string, Coin> Coins; // used to keep track of godot Node2Ds
+  private Dictionary<string, MushroomCap> _mushroomCaps; // used to keep track of godot Node2Ds
 
-  public Dictionary<string, MushroomCap> MushroomCaps; // used to keep track of godot Node2Ds
-
-  public Dictionary<string, Seed> Seeds; // used to keep track of godot Node2Ds
+  private Dictionary<string, Seed> _seeds; // used to keep track of godot Node2Ds
 
 
   public override void _Ready()
@@ -58,28 +57,28 @@ public class CollectiblesManager : Node
 
   internal void Init(Node2D collectiblesNode)
   {
-    CollectiblesNode = collectiblesNode;
+    _collectiblesNode = collectiblesNode;
 
-    Coins = new Dictionary<string, Coin>();
-    MushroomCaps = new Dictionary<string, MushroomCap>();
-    Seeds = new Dictionary<string, Seed>();
+    _coins = new Dictionary<string, Coin>();
+    _mushroomCaps = new Dictionary<string, MushroomCap>();
+    _seeds = new Dictionary<string, Seed>();
   }
 
   public CollectibleData GetCollectiblesData()
   {
     return new CollectibleData()
     {
-      CoinsData = Coins.ToDictionary(kvp => kvp.Key, kvp => new CoinData()
+      CoinsData = _coins.ToDictionary(kvp => kvp.Key, kvp => new CoinData()
       {
         Position = kvp.Value.Position,
         StartPosition = kvp.Value.StartPosition,
       }),
-      MushroomsCapData = MushroomCaps.ToDictionary(kvp => kvp.Key, kvp => new MushroomCapData()
+      MushroomsCapData = _mushroomCaps.ToDictionary(kvp => kvp.Key, kvp => new MushroomCapData()
       {
         Position = kvp.Value.Position,
         StartPosition = kvp.Value.StartPosition,
       }),
-      SeedsData = Seeds.ToDictionary(kvp => kvp.Key, kvp => new SeedData()
+      SeedsData = _seeds.ToDictionary(kvp => kvp.Key, kvp => new SeedData()
       {
         Position = kvp.Value.Position,
         StartPosition = kvp.Value.StartPosition,
@@ -87,13 +86,13 @@ public class CollectiblesManager : Node
     };
   }
 
-  internal void InitWithSaveData(SaveData saveData, TileMap tileMap, Node2D seedContainerNode)
+  internal void InitWithSaveData(CollectibleData collectiblesData, TileMap tileMap, Node2D seedContainerNode)
   {
     Dictionary<string, CoinData> coinsData;
     Dictionary<string, MushroomCapData> mushroomCapsData;
     Dictionary<string, SeedData> seedsData;
 
-    if (saveData == null)
+    if (collectiblesData == null)
     {
       // New save usecase
       coinsData = seedContainerNode.GetChildrenOfType(typeof(Coin))
@@ -119,21 +118,9 @@ public class CollectiblesManager : Node
     else
     {
       // Actual save
-      coinsData = saveData.CoinsStartPosition.ToDictionary(x => Guid.NewGuid().ToString(), x => new CoinData()
-      {
-        Position = x,
-        StartPosition = x,
-      });
-      mushroomCapsData = new Dictionary<string, MushroomCapData>() { }; // MushroomCap reset on mushroom
-      seedsData = saveData.SeedsStartPosition.ToDictionary(x => Guid.NewGuid().ToString(), x => new SeedData()
-      {
-        Position = x,
-        StartPosition = x,
-      });
-
-      // Clear the node container
-      // TODO: YSort grave hacky pour pas delete les vines
-      seedContainerNode.DeleteChildrenExceptTypes(new[] { typeof(FinalZone), typeof(Flower), typeof(Door), typeof(CanvasModulate), typeof(PowerUp), typeof(TileMap), typeof(Mushroom), typeof(Light2D), typeof(Player), typeof(SlowCollectiblePusher), typeof(YSort) });
+      coinsData = collectiblesData.CoinsData;
+      mushroomCapsData = collectiblesData.MushroomsCapData;
+      seedsData = collectiblesData.SeedsData;
     }
 
     SyncCollectibles(coinsData, mushroomCapsData, seedsData, tileMap);
@@ -150,8 +137,8 @@ public class CollectiblesManager : Node
       coinInstance.Position = coinData.Value.Position;
       coinInstance.StartPosition = coinData.Value.StartPosition;
 
-      Coins.Add(coinData.Key, coinInstance);
-      CollectiblesNode.AddChild(coinInstance);
+      _coins.Add(coinData.Key, coinInstance);
+      _collectiblesNode.AddChild(coinInstance);
     }
 
     foreach (var mushroomCapData in mushroomCapsData)
@@ -163,8 +150,8 @@ public class CollectiblesManager : Node
       mushroomCapInstance.Position = mushroomCapData.Value.Position;
       mushroomCapInstance.StartPosition = mushroomCapData.Value.StartPosition;
 
-      MushroomCaps.Add(mushroomCapData.Key, mushroomCapInstance);
-      CollectiblesNode.AddChild(mushroomCapInstance);
+      _mushroomCaps.Add(mushroomCapData.Key, mushroomCapInstance);
+      _collectiblesNode.AddChild(mushroomCapInstance);
     }
 
     foreach (var seedData in seedsData)
@@ -177,8 +164,8 @@ public class CollectiblesManager : Node
       seedInstance.TileMap = tileMap;
       seedInstance.StartPosition = seedData.Value.StartPosition;
 
-      Seeds.Add(seedData.Key, seedInstance);
-      CollectiblesNode.AddChild(seedInstance);
+      _seeds.Add(seedData.Key, seedInstance);
+      _collectiblesNode.AddChild(seedInstance);
     }
   }
 
@@ -232,8 +219,8 @@ public class CollectiblesManager : Node
     coinInstance.LinearVelocity = initialVelocity;
     coinInstance.StartPosition = startPosition;
 
-    Coins.Add(coinUID, coinInstance);
-    CollectiblesNode.CallDeferred("add_child", coinInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
+    _coins.Add(coinUID, coinInstance);
+    _collectiblesNode.CallDeferred("add_child", coinInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
   }
 
   private void DropMushroomCapRemoteSync(string mushroomCapUID, Vector2 position, Vector2 initialVelocity, Vector2 startPosition)
@@ -247,8 +234,8 @@ public class CollectiblesManager : Node
     mushroomCapInstance.StartPosition = startPosition;
 
 
-    MushroomCaps.Add(mushroomCapUID, mushroomCapInstance);
-    CollectiblesNode.CallDeferred("add_child", mushroomCapInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
+    _mushroomCaps.Add(mushroomCapUID, mushroomCapInstance);
+    _collectiblesNode.CallDeferred("add_child", mushroomCapInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
   }
 
   private void DropSeedRemoteSync(string seedUID, Vector2 position, Vector2 initialVelocity, TileMap tileMap, Vector2 startPosition)
@@ -263,15 +250,15 @@ public class CollectiblesManager : Node
     seedInstance.StartPosition = startPosition;
 
 
-    Seeds.Add(seedUID, seedInstance);
-    CollectiblesNode.CallDeferred("add_child", seedInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
+    _seeds.Add(seedUID, seedInstance);
+    _collectiblesNode.CallDeferred("add_child", seedInstance); // TODO: I used to Replace _itemsNode.AddChild(itemDropInstance); with this not 100% sure why there was errors with this
   }
 
   // ---
 
   public Coin GetCoin(string mushroomCapUID)
   {
-    if (!Coins.TryGetValue(mushroomCapUID, out var coin))
+    if (!_coins.TryGetValue(mushroomCapUID, out var coin))
     {
       return null;
     }
@@ -280,7 +267,7 @@ public class CollectiblesManager : Node
 
   public MushroomCap GetMushroomCap(string mushroomCapUID)
   {
-    if (!MushroomCaps.TryGetValue(mushroomCapUID, out var mushroomCap))
+    if (!_mushroomCaps.TryGetValue(mushroomCapUID, out var mushroomCap))
     {
       return null;
     }
@@ -289,7 +276,7 @@ public class CollectiblesManager : Node
 
   public Seed GetSeed(string UID)
   {
-    if (!Seeds.TryGetValue(UID, out var seed))
+    if (!_seeds.TryGetValue(UID, out var seed))
     {
       return null;
     }
@@ -300,7 +287,7 @@ public class CollectiblesManager : Node
 
   public void RemoveCoin(string coinUID)
   {
-    if (!Coins.TryGetValue(coinUID, out var coin))
+    if (!_coins.TryGetValue(coinUID, out var coin))
     {
       GD.PrintErr($"Coin {coinUID} was not found in _coins");
       return;
@@ -308,12 +295,12 @@ public class CollectiblesManager : Node
 
     coin.QueueFree();
 
-    Coins.Remove(coinUID);
+    _coins.Remove(coinUID);
   }
 
   public void RemoveMushroomCap(string mushroomCapUID)
   {
-    if (!MushroomCaps.TryGetValue(mushroomCapUID, out var mushroomCap))
+    if (!_mushroomCaps.TryGetValue(mushroomCapUID, out var mushroomCap))
     {
       GD.PrintErr($"MushroomCap {mushroomCapUID} was not found in _mushroomCap");
       return;
@@ -321,12 +308,12 @@ public class CollectiblesManager : Node
 
     mushroomCap.QueueFree();
 
-    MushroomCaps.Remove(mushroomCapUID);
+    _mushroomCaps.Remove(mushroomCapUID);
   }
 
   public void RemoveSeed(string UID)
   {
-    if (!Seeds.TryGetValue(UID, out var seed))
+    if (!_seeds.TryGetValue(UID, out var seed))
     {
       GD.PrintErr($"Seed {UID} was not found in _seeds");
       return;
@@ -334,7 +321,7 @@ public class CollectiblesManager : Node
 
     seed.QueueFree();
 
-    Seeds.Remove(UID);
+    _seeds.Remove(UID);
   }
 
 }

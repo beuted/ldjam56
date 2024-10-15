@@ -246,6 +246,7 @@ shape = SubResource( 11 )
 
 [node name="InputHelp" parent="." instance=ExtResource( 6 )]
 position = Vector2( -3, 3 )
+ControllerInput = "RB"
 
 [connection signal="body_entered" from="PickUpZone" to="." method="OnPickUpZoneEnter"]
 [connection signal="body_exited" from="PickUpZone" to="." method="OnPickUpZoneLeave"]

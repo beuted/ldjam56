@@ -1,14 +1,16 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 public class SaveManager : Node
 {
   private static SaveData DefaultSaveData = new SaveData()
   {
+    PlayerName = "default player name",
     PlayerPosition = new Vector2(0, 0),
+    CollectibleData = new CollectibleData(),
+    CollectibleCountData = 0,
   };
 
   private static ConfigData DefaultConfigData = new ConfigData()
@@ -23,8 +25,8 @@ public class SaveManager : Node
   private SoundManager _soundManager;
   private CollectiblesManager _collectiblesManager;
   private CollectiblesCountManager _collectiblesCountManager;
-  private static string SaveFileName = "user://godot-ladybug-s-underworld-2-dekajoo.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
-  private static string ConfigFileName = "user://godot-ladybug-s-underworld-2-config.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
+  private static string SaveFileName = "user://godot-ladybug-s-underworld-dekajoo.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
+  private static string ConfigFileName = "user://godot-ladybug-s-underworld-config.save"; // Saved @ C:\Users\dekajoo\AppData\Roaming\Godot\app_userdata\Godot Template
 
   private string UserId; // TODO: This Id should be saved once and never change as long as the game is installed
 
@@ -98,27 +100,19 @@ public class SaveManager : Node
 
     // Store the save dictionary as a new line in the save file.
     var positionPayer = _playerManager.CurrentPlayer.Position;
-    var seedsStartPosition = _collectiblesManager.Seeds.Select(x => x.Value.StartPosition).ToList();
-    var coinsStartPosition = _collectiblesManager.Coins.Select(x => x.Value.StartPosition).ToList();
-    var vinesPosition = _collectiblesManager.CollectiblesNode.GetChildrenOfType(typeof(Vine)).Select(x => (x as Vine).Position).ToList();
-    var flowersPosition = _collectiblesManager.CollectiblesNode.GetChildrenOfType(typeof(Flower)).Select(x => (x as Flower).Position).ToList();
-    var doorStates = _collectiblesManager.CollectiblesNode.GetChildrenOfType(typeof(Door)).Select(x => new DoorState()
-    {
-      Position = (x as Door).Position,
-      NbCoins = (x as Door).NbCoins,
-    }).ToList();
+    saveGame.StoreLine(Newtonsoft.Json.JsonConvert.SerializeObject(positionPayer));
 
-    var saveData = new SaveData()
-    {
-      PlayerPosition = positionPayer,
-      SeedsStartPosition = seedsStartPosition,
-      CoinsStartPosition = coinsStartPosition,
-      VinesPositions = vinesPosition,
-      FlowersPositions = flowersPosition,
-      DoorStates = doorStates
-    };
+    var playerName = _playerManager.CurrentPlayer.PlayerName;
+    saveGame.StoreLine(playerName);
 
-    saveGame.StoreLine(Newtonsoft.Json.JsonConvert.SerializeObject(saveData));
+    // The collectibles on the map with their positions etc...
+    var collectibleData = _collectiblesManager.GetCollectiblesData();
+    saveGame.StoreLine(Newtonsoft.Json.JsonConvert.SerializeObject(collectibleData));
+    GD.Print(Newtonsoft.Json.JsonConvert.SerializeObject(collectibleData));
+
+    // The counter of collectibles in the GUI
+    var collectibleCountData = _collectiblesCountManager.CoinCount;
+    saveGame.StoreLine(Newtonsoft.Json.JsonConvert.SerializeObject(collectibleCountData));
 
     saveGame.Close();
   }
@@ -139,10 +133,24 @@ public class SaveManager : Node
     saveGame.Open(SaveFileName, File.ModeFlags.Read);
 
     // Get the saved dictionary from the next line in the save file
-    var saveData = Newtonsoft.Json.JsonConvert.DeserializeObject<SaveData>(saveGame.GetLine());
+    var positionPayer = Newtonsoft.Json.JsonConvert.DeserializeObject<Vector2>(saveGame.GetLine());
+    var playerName = saveGame.GetLine();
+
+    // Get the saved dictionary from the next line in the save file
+    var collectibleData = Newtonsoft.Json.JsonConvert.DeserializeObject<CollectibleData>(saveGame.GetLine());
+
+    // Get the saved dictionary from the next line in the save file
+    var collectibleCountData = Newtonsoft.Json.JsonConvert.DeserializeObject<int>(saveGame.GetLine());
 
     saveGame.Close();
 
+    var saveData = new SaveData()
+    {
+      PlayerName = playerName,
+      PlayerPosition = positionPayer,
+      CollectibleData = collectibleData,
+      CollectibleCountData = collectibleCountData
+    };
 
     SaveData = saveData;
 
@@ -159,26 +167,10 @@ public class SaveManager : Node
 
 public class SaveData
 {
+  public string PlayerName;
   public Vector2 PlayerPosition;
-
-  // planted seeds
-  public List<Vector2> SeedsStartPosition; // We remove the seed that have been planted from this list
-
-  // planted vines + if coin taken and planted in door
-  public List<Vector2> VinesPositions;
-  public List<Vector2> FlowersPositions;
-
-  // planted coins
-  public List<Vector2> CoinsStartPosition; // We remove the seed that have been planted from this list
-
-  // for each door number of coin
-  public List<DoorState> DoorStates;
-}
-
-public class DoorState
-{
-  public Vector2 Position;
-  public int NbCoins;
+  public CollectibleData CollectibleData;
+  public int CollectibleCountData;
 }
 
 public class ConfigData

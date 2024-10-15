@@ -63,6 +63,7 @@ public class Player : KinematicBody2D
   private EffectManager _effectManager;
   private CollectiblesManager _collectiblesManager;
   private SoundManager _soundManager;
+  private InputManager _inputManager;
 
   // Scenes
   private PackedScene _spawnEffectScene;
@@ -81,6 +82,7 @@ public class Player : KinematicBody2D
     _effectManager = GetNode<EffectManager>($"/root/{nameof(EffectManager)}"); // Singleton
     _collectiblesManager = GetNode<CollectiblesManager>($"/root/{nameof(CollectiblesManager)}"); // Singleton
     _soundManager = (SoundManager)GetNode($"/root/{nameof(SoundManager)}"); // Singleton
+    _inputManager = (InputManager)GetNode($"/root/{nameof(InputManager)}"); // Singleton
 
     _animationPlayerEffects = GetNode<AnimationPlayer>("AnimationPlayerEffects");
     _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
@@ -101,8 +103,12 @@ public class Player : KinematicBody2D
 
   public override void _Input(InputEvent ev)
   {
-    _aimingPosition = GetGlobalMousePosition() - _aboveHeadPoint.GlobalPosition; // TODO: support controller
     _inputDirection = Input.GetActionStrength("move_right") - Input.GetActionStrength("move_left");
+
+    if (_inputManager.ControllerInUse)
+      _aimingPosition = _sprite.FlipH ? new Vector2(-1f, -1f).Normalized() : new Vector2(1f, -1f).Normalized();
+    else
+      _aimingPosition = GetGlobalMousePosition() - _aboveHeadPoint.GlobalPosition; // TODO: support controller
 
     if ((ev.IsActionPressed("left_click") || ev.IsActionReleased("pickup")) && CanGrab && !_balling)
     {
@@ -333,7 +339,7 @@ public class Player : KinematicBody2D
         if (horizontalComponent > 0.2f || horizontalComponent < -0.2f)
         {
           var pushDirection = ((horizontalComponent * Vector2.Right) + (0.4f * Vector2.Up)).Normalized();
-          colliderPhysicBody2d.ApplyCentralImpulse(pushDirection * 30f);
+          colliderPhysicBody2d.ApplyCentralImpulse(pushDirection * 30f + (horizontalComponent * Vector2.Right).Normalized() * (_balling ? 30f : 0f));
         }
 
         if (collision.Collider is MushroomCap mushroomCap)
@@ -369,14 +375,20 @@ public class Player : KinematicBody2D
       if (collision.Normal.x < -0.9f && _balling)
       {
         // If we collide from the right
-        _speed = new Vector2(-200f, _speed.y);
+        if (colliderPhysicBody2d != null && colliderPhysicBody2d.IsInGroup("collectibles"))
+          _speed = new Vector2(-200f, -100f);
+        else
+          _speed = new Vector2(-500f, -200f);
         _bouncing = true;
         _soundManager.PlayBounce(true);
       }
       else if (collision.Normal.x > 0.9f && _balling)
       {
         // If we collide from the left
-        _speed = new Vector2(200f, _speed.y);
+        if (colliderPhysicBody2d != null && colliderPhysicBody2d.IsInGroup("collectibles"))
+          _speed = new Vector2(200f, -100f);
+        else
+          _speed = new Vector2(500f, -200f);
         _bouncing = true;
         _soundManager.PlayBounce(true);
       }
@@ -465,17 +477,18 @@ public class Player : KinematicBody2D
   {
     if (_aboveHeadPointMushroom.Visible)
     {
-      _collectiblesManager.DropMushroomCapOnMapMaster(_aboveHeadPoint.GlobalPosition, _speed + 50f * direction, _aboveHeadStartPosition);
+      _collectiblesManager.DropMushroomCapOnMapMaster(_aboveHeadPoint.GlobalPosition, 100f * direction, _aboveHeadStartPosition);
       _aboveHeadPointMushroom.Visible = false;
     }
     else if (_aboveHeadPointSeed.Visible)
     {
-      _collectiblesManager.DropSeedOnMapMaster(_aboveHeadPoint.GlobalPosition, _speed + 50f * direction, _tileMap, _aboveHeadStartPosition);
+      _collectiblesManager.DropSeedOnMapMaster(_aboveHeadPoint.GlobalPosition, 80f * direction, _tileMap, _aboveHeadStartPosition);
       _aboveHeadPointSeed.Visible = false;
+      GD.Print(_aboveHeadPoint.GlobalPosition);
     }
     else if (_aboveHeadPointCoin.Visible)
     {
-      _collectiblesManager.DropCoinOnMapMaster(_aboveHeadPoint.GlobalPosition, _speed + 50f * direction, _aboveHeadStartPosition);
+      _collectiblesManager.DropCoinOnMapMaster(_aboveHeadPoint.GlobalPosition, 100f * direction, _aboveHeadStartPosition);
       _aboveHeadPointCoin.Visible = false;
 
     }

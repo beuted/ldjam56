@@ -7,7 +7,7 @@ public class InputHelp : Node2D
     public string Letter = "E";
 
     [Export]
-    public string ControllerInput = "Y"; //TODO: deal with controller support
+    public string ControllerInput = "RB"; //TODO: deal with controller support
 
     private int _price = -1;
 

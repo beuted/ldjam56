@@ -8,8 +8,8 @@ public class PlayerManager : Node
   private CameraManager _cameraManager;
   private Node2D _ySort;
 
-  public static Vector2 StartPosition = new Vector2(12, -183);
-  // public static Vector2 StartPosition = new Vector2(12, -183); // NORMAL
+  public static Vector2 StartPosition = new Vector2(32, -200);
+  // public static Vector2 StartPosition = new Vector2(32, -200); // NORMAL
   //public static Vector2 StartPosition = new Vector2(3512, -678); // Spawn at final final
   //public static Vector2 StartPosition = new Vector2(2155, -200); // Spawn at final final
 
